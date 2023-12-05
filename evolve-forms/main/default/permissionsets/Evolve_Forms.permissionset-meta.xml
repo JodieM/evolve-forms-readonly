@@ -60,10 +60,6 @@
         <apexClass>LightningFormattedUrl</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <customMetadataTypeAccesses>
-        <enabled>true</enabled>
-        <name>Conditional_Warning__mdt</name>
-    </customMetadataTypeAccesses>
     <description>Enables access to all of the components in the Evolve forms package</description>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Evolve Forms</label>

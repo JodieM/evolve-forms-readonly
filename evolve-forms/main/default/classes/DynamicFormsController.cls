@@ -95,38 +95,7 @@ public with sharing class DynamicFormsController {
     }
   }
 
-  /**
-   * @description - Invokes the flow with the specified API name and returns the value
-   * of the `warningMessage` output variable.
-   * @param record - The state of the current record including all field values
-   * from the database as well as the current pending edits.
-   * @param flowApiName - the flow to be invoked.
-   * @return any applicable error message from the flow.
-   */
-  @SuppressWarnings('PMD.CatchSpecificExceptionType')
-  @AuraEnabled
-  public static String evaluateConditionalWarning(
-    SObject record,
-    String flowApiName
-  ) {
-    if (record == null || flowApiName == null) {
-      throw new IllegalArgumentException(INVALID_INPUT);
-    }
-    try {
-      flowInterview.createInterview(
-        flowApiName,
-        new Map<String, Object>{ RECORD_VARIABLE => record }
-      );
-      flowInterview.start();
-    } catch (Exception e) {
-      String message = e.getMessage();
-      AuraHandledException auraException = new AuraHandledException(message);
-      auraException.setMessage(message);
-      throw auraException;
-    }
-    return (String) flowInterview.getVariableValue(WARNING_MESSAGE);
-  }
-
+  
   /**
    * @description - Fetch User Record Access.
    * @param userId - Id of the Logged In user.
@@ -191,18 +160,7 @@ public with sharing class DynamicFormsController {
     };
   }
 
-  /**
-   * @description - Fetches the metadata for conditional warnings within the system.
-   * @param sObjectApiName - The sObject API name for the current record.
-   * @return - The configured warnings for this specific sObject.
-   */
-  @AuraEnabled(cacheable=true)
-  public static List<Conditional_Warning__mdt> getWarnings(
-    String sObjectApiName
-  ) {
-    return selector.getWarnings(sObjectApiName);
-  }
-
+  
   /**
    * @description Fetches the record id of a parent record.
    * @param sObjectType - The sObject API name for the current record.
@@ -702,21 +660,6 @@ public with sharing class DynamicFormsController {
         FROM Conditional_Warning__mdt
         WHERE SObject_API_Name__c = :sObjectApiName
       ];
-    }
-
-    /**
-     * @description - Fetches the metadata of a Layout definition as defined exactly in source XML.
-     * @param layoutName - exact filename in source (i.e. 'Case-Service').
-     * @return - The layout with the provided API name.
-     */
-    public virtual Metadata.Layout getPageLayout(String layoutName) {
-      List<Metadata.Metadata> layouts = Metadata.Operations.retrieve(
-        Metadata.MetadataType.Layout,
-        new List<String>{ layoutName }
-      );
-      return layouts.isEmpty()
-        ? new Metadata.Layout()
-        : (Metadata.Layout) layouts[0];
     }
 
     /**
